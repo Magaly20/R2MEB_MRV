@@ -69,3 +69,41 @@ doc <- body_add_par(doc, "Tabla de Frecuencia de Suicides/100k Pop", style = "he
 
 # Guardar el documento de Word
 print(doc, target = "tabla_frecuencia_suicides.docx")
+
+##############country
+#Medidas descriptivas: 
+# Tabla de frecuencia de la variable 'country'
+tabla_country <- table(mi_data$country)
+print(tabla_country)
+# Convertimos la tabla a un data frame
+df_country <- as.data.frame(tabla_country)
+colnames(df_country) <- c("Tabla de países", "Frecuencia")
+
+# Se hace un objeto flexible
+ft <- flextable(df_country)
+ft <- theme_box(ft)  # Aplicar un tema básico
+ft <- autofit(ft)    # Ajustar el ancho de las columnas
+
+# Se crea un documento en word nuevo
+doc <- read_docx()
+doc <- body_add_flextable(doc, value = ft)
+doc <- body_add_par(doc, "Tabla de Frecuencia de Country", style = "heading 1")
+
+# Guardar el documento de Word
+print(doc, target = "tabla_frecuencia_country.docx")
+
+
+# País más frecuente (moda)
+moda_country <- names(sort(tabla_country, decreasing = TRUE)[1])
+cat("El país que más aparece es:", moda_country, "\n")
+
+# Gráfico de barras de los países
+barplot(tabla_country,
+        main = "Frecuencia de cada País",
+        xlab = "",
+        ylab = "Frecuencia",
+        las = 2, # Rotar las etiquetas del eje X para que se lean mejor
+        col = "lightblue",
+        cex.names = 0.7,
+        ylim=c(0,450))# Ajustar el tamaño de las etiquetas si son muchas
+mtext("País", side = 1, line = 4)
